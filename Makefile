@@ -10,7 +10,7 @@ INSTALL		= install
 INSTALL_PROGRAM	= ${INSTALL} -m 0755
 INSTALL_DATA	= ${INSTALL} -m 0644
 
-CFLAGS		= -ansi -pedantic -Wall -O2 -g
+CFLAGS		= -pedantic -Wall -O2 -g
 
 prefix		= /usr/local
 exec_prefix	= ${prefix}
@@ -26,7 +26,7 @@ srcdir		= .
 
 CPPFLAGS	= -DVERSION=\"${VERSION}\"
 
-SOURCES		= api.c exec.c list.c main.c status.c
+SOURCES		= api.c exec.c list.c load.c main.c status.c
 OBJS		= ${SOURCES:.c=.o}
 
 PROG		= tamad

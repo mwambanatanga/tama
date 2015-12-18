@@ -14,7 +14,7 @@ int getbirth(char *name)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, tmp=0;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 	
 	strncpy(tama, name, MAXNAME);
@@ -39,7 +39,7 @@ int getpassw(char *name, char *string)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, at;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
@@ -70,7 +70,7 @@ int gettime(char *name)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, tmp=0;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 	
 	strncpy(tama, name, MAXNAME);
@@ -96,7 +96,7 @@ int getpet(char *name)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, tmp=0;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 	
 	strncpy(tama, name, MAXNAME);
@@ -122,8 +122,8 @@ int getweight(char *name)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, tmp=0;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
-		return INITWEIGHT;
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+		return configstruct.initweight;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
@@ -148,7 +148,7 @@ int setweight(char *name, int weight)
 	char buf[BUFLEN], tama[MAXNAME+1], temp[MAXNAME];
 	int ctr;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 
 	if((tmp=tmpfile())==NULL)
@@ -166,7 +166,7 @@ int setweight(char *name, int weight)
 		fputs(buf, tmp);
 	}
 
-	freopen(TAMAFILE, "w", ptr);
+	freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -180,20 +180,26 @@ int setweight(char *name, int weight)
 /* does a tamagotchi exist? returns 0 if so, -1 if not */
 int exist(char *name)
 {
+printf("Entring exist()\n");
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+1];
+	char buf[BUFLEN], tama[MAXNAME+2];
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 	
+printf("zyu\n");
 	strncpy(tama, name, MAXNAME);
+printf("zya\n");
 	strcat(tama, ":");
+printf("zyo\n");
 	while(fgets(buf, BUFLEN, ptr)!=NULL)
 		if(strstr(buf, tama)==buf) {
 			fclose(ptr);
+printf("Exiting exist()\n");
 			return 0;
 		}
 	fclose(ptr);
+printf("Exiting exist()\n");
 	return -1;
 }
 
@@ -220,11 +226,11 @@ int new(char *name, char *pass)
 	FILE *ptr;
 	int cur;
 
-	if((ptr=fopen(TAMAFILE, "a"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "a"))==NULL)
 		return -1;
 
 	cur=time(NULL);
-	fprintf(ptr, "%s:%s:%d:%d:%d:%d:\n", name, pass, cur, cur, cur, INITWEIGHT);
+	fprintf(ptr, "%s:%s:%d:%d:%d:%d:\n", name, pass, cur, cur, cur, configstruct.initweight);
 	fclose(ptr);
 	return 0;
 }
@@ -235,7 +241,7 @@ int checkpass(char *name, char *pass)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, at;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
@@ -265,7 +271,7 @@ void del(char *name)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return;
 
 	if((tmp=tmpfile())==NULL)
@@ -278,7 +284,7 @@ void del(char *name)
 		fputs(buf, tmp);
 	}
 
-	freopen(TAMAFILE, "w", ptr);
+	freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -296,7 +302,7 @@ int setpass(char *name, char *pass)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 
 	if((tmp=tmpfile())==NULL)
@@ -313,7 +319,7 @@ int setpass(char *name, char *pass)
 		fputs(buf, tmp);
 	}
 
-	freopen(TAMAFILE, "w", ptr);
+	freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -331,7 +337,7 @@ int setname(char *oldname, char *newname)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 
 	if((tmp=tmpfile())==NULL)
@@ -349,7 +355,7 @@ int setname(char *oldname, char *newname)
 		fputs(buf, tmp);
 	}
 
-	freopen(TAMAFILE, "w", ptr);
+	freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -368,10 +374,10 @@ int feed(char *name)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, num=0;
 
-	if((time(NULL)-gettime(name))/3600 < FEEDLIMIT)
+	if((time(NULL)-gettime(name))/3600 < configstruct.feedlimit)
 		return 1;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 
 	if((tmp=tmpfile())==NULL)
@@ -393,7 +399,7 @@ int feed(char *name)
 		fputs(buf, tmp);
 	}
 
-	freopen(TAMAFILE, "w", ptr);
+	freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -411,7 +417,7 @@ int pet(char *name)
 	char buf[BUFLEN], tama[MAXNAME+1];
 	int ctr, num=0;
 
-	if((ptr=fopen(TAMAFILE, "r"))==NULL)
+	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 
 	if((tmp=tmpfile())==NULL)
@@ -433,7 +439,7 @@ int pet(char *name)
 		fputs(buf, tmp);
 	}
 
-	freopen(TAMAFILE, "w", ptr);
+	freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)

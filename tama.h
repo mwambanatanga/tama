@@ -14,9 +14,9 @@
 #define MOTD "tama.motd"	/* MOTD file */
 #define TAMAFILE "tamas"
 #define INITWEIGHT 20
-#define FEEDLIMIT 3
+#define FEEDLIMIT 3	/* hours between feedings */
 #define TAB 8
-#define HUNGERTIME 12
+#define HUNGERTIME 12	/* period of time to trigger hunger and/or loneliness (same interval for both) */
 #define HUNGERPOUND 12	/* period of hunger to lose a pound */
 #define DEATHTIME 48
 #define LONELYTIME 6
@@ -118,10 +118,33 @@ void get(char *);
 void put(char *);
 void status(char *, int);
 
+char *trim(char *string);
+
 struct client {
 	pid_t pid;
 	char *hostname;
 };
+
+#define MAXBUF 1024
+
+struct config {
+	int port;
+	int maxqueue;
+	char tamafile[MAXBUF];
+	int initweight;
+	int feedlimit;
+	int hungertime;
+	int hungerpound;
+	int deathtime;
+	int lonelytime;
+	int maxclients;
+	int maxlist;
+};
+
+struct config configstruct;
+
+void init_config(struct config *configstruct);
+int readconfig(char *filename, struct config *configstruct);
 
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE

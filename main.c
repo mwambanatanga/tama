@@ -34,6 +34,8 @@
 
 int s;
 
+
+
 /* Return ASCII string of current time */
 char *logtime()
 {
@@ -120,21 +122,70 @@ void put(char *buf)
 
 int main(int argc, char **argv)
 {
+	init_config(&configstruct);
+	int opts;
+	int i;
+	int j = 0;
+	while ((opts = getopt(argc, argv, "c:p:q:")) != -1) {
+		switch (opts) {
+		case 'c':
+			printf("Setting config file to \"%s\"\n", optarg);
+			if (0 != readconfig(optarg, &configstruct))
+				printf("Can not read config file.\n");
+			break;
+		case 'q':
+			printf("Setting queue size to %s\n", optarg);
+			for (i=0;i<strlen(optarg); i++) {
+				if (!isdigit(optarg[i])) {
+					printf ("Queue size is not a number\n");
+					j = 1;
+				}
+			}
+			if (!j) configstruct.maxqueue = atoi(optarg);
+			break;
+		case 'p':
+			printf("Setting port number to %s\n", optarg);
+			for (i=0;i<strlen(optarg); i++) {
+				if (!isdigit(optarg[i])) {
+					printf ("Port is not a number\n");
+					j = 1;
+				}
+			}
+			if (!j) configstruct.port = atoi(optarg);
+			break;
+		}
+	}
+
+	printf("Port number set to %i\n", configstruct.port);
+	printf("Queue limit set to %i\n", configstruct.maxqueue);
+	printf("Pets file set to %s\n", configstruct.tamafile);
+	printf("Initial weight set to %i\n", configstruct.initweight);
+	printf("Feeding interval set to %i\n", configstruct.feedlimit);
+	printf("Hunger time set to %i\n", configstruct.hungertime);
+	printf("Time to lose a pound set to %i\n", configstruct.hungerpound);
+	printf("Time to death set to %i\n", configstruct.deathtime);
+	printf("Time to getting lonely set to %i\n", configstruct.lonelytime);
+	printf("Max number of clients set to %i\n", configstruct.maxclients);
+	printf("List length limit to %i\n", configstruct.maxlist);
+
 	fd_set input;
 	pid_t pid;
-	socklen_t fromlen;
 	int rs, ns, port, fd, opt = 1, flags, clients = 0;
 	struct timeval to;
-	struct sockaddr_in sin, fsin;
+	struct sockaddr_in sin;
+	struct sockaddr_in fsin;
 	struct hostent *hp;
-	char buf[BUFLEN], name[MAXNAME+1], *host, arg[BUFLEN], *ptr; 
-
+	int result;
+	char buf[BUFLEN], name[MAXNAME+1], arg[BUFLEN], *ptr; 
+/**
 	if(argc>1) {
 		if(argc>2 || atoi(argv[1])==0) {
 			fprintf(stderr, COMMANDLINE);
 			return 1;
 		} else port = atoi(argv[1]);
-	} else port = PORT;
+	} else 
+*/
+	port = configstruct.port;
 
 	/* Hook signals */
 	(void) signal(SIGINT, term);
@@ -151,8 +202,8 @@ int main(int argc, char **argv)
 
 	setsockopt(ns, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt));
 
-	memset(&sin, 0, sizeof(struct sockaddr_in));
-	memset(&fsin, 0, sizeof(struct sockaddr_in));
+	memset(&sin, 0, sizeof(struct sockaddr));
+	memset(&fsin, 0, sizeof(struct sockaddr));
 
 	sin.sin_family=AF_INET;
 	sin.sin_port=htons(port);
@@ -166,13 +217,16 @@ int main(int argc, char **argv)
 	}
 	printf("%s Bound socket to port %d\n", logtime(), port);
 
-	if(listen(ns, MAXQUEUE) < 0) {
+	if(listen(ns, configstruct.maxqueue) < 0) {
 		perror("listen()");
 		return 1;
 	}
 
 	printf("%s Listening for connections...\n", logtime());
 	while(1) {
+		socklen_t fromlen;
+		char clienthost[1024];
+		char clientport[20];
 		/* Set time interval in which to perform zombie checks...
 		** We have to do this every time it loops because select()
 		** under Linux clears the timeout struct... lame. */
@@ -187,6 +241,8 @@ int main(int argc, char **argv)
 				printf("%s ", logtime());
 				fflush(stdout);
 				perror("accept()");
+				printf("rs = %i\n", rs);
+				printf("ns = %i\n", ns);
 				continue;
 			}
 		} else {
@@ -198,7 +254,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		if(clients >= MAXCLIENTS) {
+		if(clients >= configstruct.maxclients) {
 			s = rs;
 			put("\nSorry, Net Tamagotchi is full right now.\nTry logging in later.\n\n");
 			close(rs);
@@ -219,13 +275,15 @@ int main(int argc, char **argv)
 		if((pid=fork()) > 0) {
 
 		/* Resolve remote hostname */
-			hp = gethostbyaddr((char *)&fsin.sin_addr, sizeof(struct in_addr), fsin.sin_family);
+//			hp = gethostbyaddr((char *)&fsin.sin_addr, sizeof(struct in_addr), fsin.sin_family);
+			result = getnameinfo((struct sockaddr *)&fsin, sizeof(fsin), clienthost, sizeof(clienthost), clientport, sizeof(clientport), 0);
+/*
 			if (hp)
 				host = hp->h_name;
 			else
 				host = inet_ntoa(fsin.sin_addr);	
-	
-			printf("%s [%d] Accepted connection from %s\n", logtime(), pid, host);
+*/	
+			if (result == 0) printf("%s [%d] Accepted connection from %s:%s\n", logtime(), pid, clienthost, clientport);
 			close(rs);
 			continue;
 		}
@@ -238,10 +296,13 @@ int main(int argc, char **argv)
 
 		put(INTRO);
 		alarm(TIMELIMIT);	/* Set timeout alarm */
-
+printf("1\n");
 		get(buf);
+printf("2 - %s\n", buf);
 		strncpy(name, buf, MAXNAME);
-		if(exist(buf)<0) {
+printf("3 - %s\n", name);
+		if(exist(name)<0) {
+			printf("4\n");
 			/* Check username format */
 			if(check(name)<0) {
 				put("That name is invalid.\n");
@@ -274,6 +335,7 @@ int main(int argc, char **argv)
 			put("\", created.\n");
 			printf("%s Created %s\n", logtime(), name);
 		} else {
+			printf("4\n");
 			put("Tamagotchi found. Please enter password: ");
 			get(buf);
 			if(checkpass(name, buf)<0) {
