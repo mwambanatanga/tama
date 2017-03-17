@@ -28,7 +28,7 @@
 #define NOACCESS "Error: Can't open Tamagotchi file. Please try again later.\n"
 #define STRINGRULE "You may not use spaces, control codes, or special characters.\n"
 #define BYE "Don't forget to feed your Tamagotchi!\n"
-#define VER "Net Tamagotchi " VERSION "\n"
+#define VER "Net Tamagotchi " VERSION
 #define COMMANDLINE VER\
 		"Usage: tamad [port]\n"
 

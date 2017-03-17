@@ -89,6 +89,8 @@ int readconfig(char *filename, struct config *configstruct)
 				configstruct->feedlimit = atoi(value);
 			else if (strcmp(name, "hungertime") == 0)
 				configstruct->hungertime = atoi(value);
+			else if (strcmp(name, "hungerpound") == 0)
+				configstruct->hungerpound = atoi(value);
 			else if (strcmp(name, "deathtime") == 0)
 				configstruct->deathtime = atoi(value);
 			else if (strcmp(name, "lonelytime") == 0)

@@ -126,8 +126,16 @@ int main(int argc, char **argv)
 	int opts;
 	int i;
 	int j = 0;
-	while ((opts = getopt(argc, argv, "c:p:q:")) != -1) {
+	if (argc == 1) {
+		printf("%s\n", VER);
+		return 0;
+	}
+	while ((opts = getopt(argc, argv, "c:p:q:v")) != -1) {
 		switch (opts) {
+		case 'v':
+			printf("%s\n", VER);
+			return 0;
+			break;
 		case 'c':
 			printf("Setting config file to \"%s\"\n", optarg);
 			if (0 != readconfig(optarg, &configstruct))
@@ -159,12 +167,12 @@ int main(int argc, char **argv)
 	printf("Port number set to %i\n", configstruct.port);
 	printf("Queue limit set to %i\n", configstruct.maxqueue);
 	printf("Pets file set to %s\n", configstruct.tamafile);
-	printf("Initial weight set to %i\n", configstruct.initweight);
-	printf("Feeding interval set to %i\n", configstruct.feedlimit);
-	printf("Hunger time set to %i\n", configstruct.hungertime);
-	printf("Time to lose a pound set to %i\n", configstruct.hungerpound);
+	printf("Initial weight set to %i pounds\n", configstruct.initweight);
+	printf("Feeding interval set to %i hours\n", configstruct.feedlimit);
+	printf("Hunger time set to %i hours\n", configstruct.hungertime);
+	printf("Time to lose a pound set to %i hours\n", configstruct.hungerpound);
 	printf("Time to death set to %i\n", configstruct.deathtime);
-	printf("Time to getting lonely set to %i\n", configstruct.lonelytime);
+	printf("Time to getting lonely set to %i hours\n", configstruct.lonelytime);
 	printf("Max number of clients set to %i\n", configstruct.maxclients);
 	printf("List length limit to %i\n", configstruct.maxlist);
 
@@ -193,7 +201,7 @@ int main(int argc, char **argv)
 	(void) signal(SIGSEGV, segv);
 	(void) signal(SIGCHLD, chld);
 
-	printf("%s [%d] Starting %s", logtime(), getpid(), VER);
+	printf("%s [%d] Starting %s\n", logtime(), getpid(), VER);
 	if((ns = socket(AF_INET, SOCK_STREAM, IPPROTO_IP)) < 0) {
 		perror("socket()");
 		return 1;
@@ -296,13 +304,9 @@ int main(int argc, char **argv)
 
 		put(INTRO);
 		alarm(TIMELIMIT);	/* Set timeout alarm */
-printf("1\n");
 		get(buf);
-printf("2 - %s\n", buf);
 		strncpy(name, buf, MAXNAME);
-printf("3 - %s\n", name);
 		if(exist(name)<0) {
-			printf("4\n");
 			/* Check username format */
 			if(check(name)<0) {
 				put("That name is invalid.\n");
@@ -335,7 +339,6 @@ printf("3 - %s\n", name);
 			put("\", created.\n");
 			printf("%s Created %s\n", logtime(), name);
 		} else {
-			printf("4\n");
 			put("Tamagotchi found. Please enter password: ");
 			get(buf);
 			if(checkpass(name, buf)<0) {

@@ -180,26 +180,20 @@ int setweight(char *name, int weight)
 /* does a tamagotchi exist? returns 0 if so, -1 if not */
 int exist(char *name)
 {
-printf("Entring exist()\n");
 	FILE *ptr;
 	char buf[BUFLEN], tama[MAXNAME+2];
 
 	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
 		return -1;
 	
-printf("zyu\n");
 	strncpy(tama, name, MAXNAME);
-printf("zya\n");
 	strcat(tama, ":");
-printf("zyo\n");
 	while(fgets(buf, BUFLEN, ptr)!=NULL)
 		if(strstr(buf, tama)==buf) {
 			fclose(ptr);
-printf("Exiting exist()\n");
 			return 0;
 		}
 	fclose(ptr);
-printf("Exiting exist()\n");
 	return -1;
 }
 
