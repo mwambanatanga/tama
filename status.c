@@ -17,7 +17,6 @@
 
 #include "tama.h"
 
-
 extern int server_socket;
 
 void status(char *name, int proc)
@@ -25,53 +24,63 @@ void status(char *name, int proc)
 	int diff, knockoff;
 	char tmp[BUFLEN];
 
-	diff=(time(NULL)-gettime(name))/3600;
-	if((time(NULL)-getpet(name))/3600 < configstruct.lonelytime)
+	diff = (time(NULL) - gettime(name)) / 3600;
+	if ((time(NULL) - getpet(name)) / 3600 < configstruct.lonelytime)
 		diff--;
 
-	if(proc > 0) {
-		if((diff-configstruct.hungertime)>0) {
-			knockoff = (diff-configstruct.hungertime) / configstruct.hungerpound;
-			if(setweight(name, getweight(name)-knockoff)<0) {
+	if (proc > 0) {
+		if ((diff - configstruct.hungertime) > 0) {
+			knockoff =
+			    (diff -
+			     configstruct.hungertime) /
+			    configstruct.hungerpound;
+			if (setweight(name, getweight(name) - knockoff) < 0) {
 				put(NOACCESS);
-				return;			/* paranoid */
+				return;	/* paranoid */
 			}
 		}
 	}
 
-	if(getweight(name)<1) {
+	if (getweight(name) < 1) {
 		put(DEAD);
 		del(name);
 		close(server_socket);
 		exit(0);
 	}
 
-	if(diff < configstruct.hungertime) {
-		if((time(NULL)-getpet(name))/3600 >= configstruct.lonelytime)
+	if (diff < configstruct.hungertime) {
+		if ((time(NULL) - getpet(name)) / 3600 >=
+		    configstruct.lonelytime)
 			put(LONELY);
-		else put(HAPPY);
-	}
-	else if(diff>=configstruct.hungertime && diff <= configstruct.deathtime)
+		else
+			put(HAPPY);
+	} else if (diff >= configstruct.hungertime
+		   && diff <= configstruct.deathtime)
 		put(UNHAPPY);
-	else if(diff > configstruct.deathtime) {
-		if(proc > 0 && setweight(name, getweight(name)-(diff-configstruct.deathtime))<0) {
+	else if (diff > configstruct.deathtime) {
+		if (proc > 0
+		    && setweight(name,
+				 getweight(name) - (diff -
+						    configstruct.deathtime)) <
+		    0) {
 			put(NOACCESS);
 			return;
 		}
-		if(getweight(name)<1) {
+		if (getweight(name) < 1) {
 			put(DEAD);
 			del(name);
 			close(server_socket);
 			exit(0);
 		}
 	}
-		put("\nName: ");
-		put(name);
-		sprintf(tmp, "\t\tAge: %d hours", ((int)time(NULL)-getbirth(name))/3600);
-		put(tmp);
-		put("\t\tWeight: ");
-		sprintf(tmp, "%d units\n", getweight(name));
-		put(tmp);
+	put("\nName: ");
+	put(name);
+	sprintf(tmp, "\t\tAge: %d hours",
+		((int)time(NULL) - getbirth(name)) / 3600);
+	put(tmp);
+	put("\t\tWeight: ");
+	sprintf(tmp, "%d units\n", getweight(name));
+	put(tmp);
 
 	return;
-} 
+}

@@ -11,54 +11,57 @@
 int getbirth(char *name)
 {
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+1];
-	int ctr, tmp=0;
+	char buf[BUFLEN], tama[MAXNAME + 1];
+	int ctr, tmp = 0;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
-	
+
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL)
-		if(strstr(buf, tama)==buf)
+	while (fgets(buf, BUFLEN, ptr) != NULL)
+		if (strstr(buf, tama) == buf)
 			break;
 
 	fclose(ptr);
-	for(ctr=0; ctr<BUFLEN; ctr++) {
-		if(buf[ctr]==':') tmp++;
-		if(tmp==2) break;
+	for (ctr = 0; ctr < BUFLEN; ctr++) {
+		if (buf[ctr] == ':')
+			tmp++;
+		if (tmp == 2)
+			break;
 	}
 
-	return(atoi(buf+ctr+1));	
+	return (atoi(buf + ctr + 1));
 }
 
 /* returns -1 on error*/
 int getpassw(char *name, char *string)
 {
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+1];
+	char buf[BUFLEN], tama[MAXNAME + 1];
 	int ctr, at;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL)
-		if(strstr(buf, tama)==buf)
+	while (fgets(buf, BUFLEN, ptr) != NULL)
+		if (strstr(buf, tama) == buf)
 			break;
 
 	fclose(ptr);
-	for(ctr=0; ctr<BUFLEN; ctr++)
-		if(buf[ctr]==':') break;
-	at=ctr+1;
-	for(ctr++; ctr<BUFLEN; ctr++)
-		if(buf[ctr]==':') {
-			buf[ctr]='\0';
+	for (ctr = 0; ctr < BUFLEN; ctr++)
+		if (buf[ctr] == ':')
+			break;
+	at = ctr + 1;
+	for (ctr++; ctr < BUFLEN; ctr++)
+		if (buf[ctr] == ':') {
+			buf[ctr] = '\0';
 			break;
 		}
 
-	strncpy(string, buf+at, MAXNAME);
+	strncpy(string, buf + at, MAXNAME);
 	return 0;
 }
 
@@ -67,25 +70,27 @@ int getpassw(char *name, char *string)
 int gettime(char *name)
 {
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+1];
-	int ctr, tmp=0;
+	char buf[BUFLEN], tama[MAXNAME + 1];
+	int ctr, tmp = 0;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
-	
+
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL)
-		if(strstr(buf, tama)==buf)
+	while (fgets(buf, BUFLEN, ptr) != NULL)
+		if (strstr(buf, tama) == buf)
 			break;
 
 	fclose(ptr);
-	for(ctr=0; ctr<BUFLEN; ctr++) {
-		if(buf[ctr]==':') tmp++;
-		if(tmp==3) break;
+	for (ctr = 0; ctr < BUFLEN; ctr++) {
+		if (buf[ctr] == ':')
+			tmp++;
+		if (tmp == 3)
+			break;
 	}
 
-	return(atoi(buf+ctr+1));	
+	return (atoi(buf + ctr + 1));
 }
 
 /* reads last petting time from the tamagotchi file */
@@ -93,25 +98,27 @@ int gettime(char *name)
 int getpet(char *name)
 {
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+1];
-	int ctr, tmp=0;
+	char buf[BUFLEN], tama[MAXNAME + 1];
+	int ctr, tmp = 0;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
-	
+
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL)
-		if(strstr(buf, tama)==buf)
+	while (fgets(buf, BUFLEN, ptr) != NULL)
+		if (strstr(buf, tama) == buf)
 			break;
 
 	fclose(ptr);
-	for(ctr=0; ctr<BUFLEN; ctr++) {
-		if(buf[ctr]==':') tmp++;
-		if(tmp==4) break;
+	for (ctr = 0; ctr < BUFLEN; ctr++) {
+		if (buf[ctr] == ':')
+			tmp++;
+		if (tmp == 4)
+			break;
 	}
 
-	return(atoi(buf+ctr+1));	
+	return (atoi(buf + ctr + 1));
 }
 
 /* reads weight from the tamagotchi file */
@@ -119,25 +126,27 @@ int getpet(char *name)
 int getweight(char *name)
 {
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+1];
-	int ctr, tmp=0;
+	char buf[BUFLEN], tama[MAXNAME + 1];
+	int ctr, tmp = 0;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return configstruct.initweight;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL)
-		if(strstr(buf, tama)==buf)
+	while (fgets(buf, BUFLEN, ptr) != NULL)
+		if (strstr(buf, tama) == buf)
 			break;
 
 	fclose(ptr);
-	for(ctr=0; ctr<BUFLEN; ctr++) {
-		if(buf[ctr]==':') tmp++;
-		if(tmp==5) break;
+	for (ctr = 0; ctr < BUFLEN; ctr++) {
+		if (buf[ctr] == ':')
+			tmp++;
+		if (tmp == 5)
+			break;
 	}
 
-	return(atoi(buf+ctr+1));	
+	return (atoi(buf + ctr + 1));
 }
 
 /* Change the weight of a Tamagotchi */
@@ -145,32 +154,35 @@ int getweight(char *name)
 int setweight(char *name, int weight)
 {
 	FILE *ptr, *tmp;
-	char buf[BUFLEN], tama[MAXNAME+1], temp[MAXNAME];
+	char buf[BUFLEN], tama[MAXNAME + 1], temp[MAXNAME];
 	int ctr;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
 
-	if((tmp=tmpfile())==NULL)
+	if ((tmp = tmpfile()) == NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL) {
-		if(strstr(buf, tama)==buf) {
-			if(getpassw(name, temp)<0) return -1;
+	while (fgets(buf, BUFLEN, ptr) != NULL) {
+		if (strstr(buf, tama) == buf) {
+			if (getpassw(name, temp) < 0)
+				return -1;
 			fprintf(tmp, "%s%s:%d:%d:%d:%d:\n", tama, temp,
-				getbirth(name), gettime(name), getpet(name), weight);
+				getbirth(name), gettime(name), getpet(name),
+				weight);
 			continue;
 		}
 		fputs(buf, tmp);
 	}
 
 	ptr = freopen(configstruct.tamafile, "w", ptr);
-	if (!ptr) return -1;
+	if (!ptr)
+		return -1;
 	rewind(tmp);
 
-	while((ctr=getc(tmp))!=EOF)
+	while ((ctr = getc(tmp)) != EOF)
 		putc(ctr, ptr);
 
 	fclose(ptr);
@@ -182,15 +194,15 @@ int setweight(char *name, int weight)
 int exist(char *name)
 {
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+2];
+	char buf[BUFLEN], tama[MAXNAME + 2];
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
-	
+
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL)
-		if(strstr(buf, tama)==buf) {
+	while (fgets(buf, BUFLEN, ptr) != NULL)
+		if (strstr(buf, tama) == buf) {
 			fclose(ptr);
 			return 0;
 		}
@@ -203,13 +215,13 @@ int check(char *string)
 {
 	int ctr;
 
-	if(strlen(string)>16)
+	if (strlen(string) > 16)
 		return -1;
-	if(strstr(string, ":")!=NULL)
+	if (strstr(string, ":") != NULL)
 		return -1;
 
-	for(ctr=0; ctr<strlen(string); ctr++)
-		if(string[ctr]<48 || string[ctr]>126)
+	for (ctr = 0; ctr < strlen(string); ctr++)
+		if (string[ctr] < 48 || string[ctr] > 126)
 			return -1;
 
 	return 0;
@@ -221,68 +233,73 @@ int new(char *name, char *pass)
 	FILE *ptr;
 	int cur;
 
-	if((ptr=fopen(configstruct.tamafile, "a"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "a")) == NULL)
 		return -1;
 
-	cur=time(NULL);
-	fprintf(ptr, "%s:%s:%d:%d:%d:%d:\n", name, pass, cur, cur, cur, configstruct.initweight);
+	cur = time(NULL);
+	fprintf(ptr, "%s:%s:%d:%d:%d:%d:\n", name, pass, cur, cur, cur,
+		configstruct.initweight);
 	fclose(ptr);
 	return 0;
 }
+
 /* returns -1 if wrong, 0 if correct */
 int checkpass(char *name, char *pass)
 {
 	FILE *ptr;
-	char buf[BUFLEN], tama[MAXNAME+1];
+	char buf[BUFLEN], tama[MAXNAME + 1];
 	int ctr, at;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL)
-		if(strstr(buf, tama)==buf)
+	while (fgets(buf, BUFLEN, ptr) != NULL)
+		if (strstr(buf, tama) == buf)
 			break;
 
 	fclose(ptr);
-	for(ctr=0; ctr<BUFLEN; ctr++)
-		if(buf[ctr]==':') break;
-	at=ctr+1;
-	for(ctr++; ctr<BUFLEN; ctr++)
-		if(buf[ctr]==':') {
-			buf[ctr]='\0';
+	for (ctr = 0; ctr < BUFLEN; ctr++)
+		if (buf[ctr] == ':')
+			break;
+	at = ctr + 1;
+	for (ctr++; ctr < BUFLEN; ctr++)
+		if (buf[ctr] == ':') {
+			buf[ctr] = '\0';
 			break;
 		}
-	if(strcmp(pass, buf+at)==0)
+	if (strcmp(pass, buf + at) == 0)
 		return 0;
-	else return -1;
+	else
+		return -1;
 }
 
 /* remove Tamagotchi profile */
 void del(char *name)
 {
 	FILE *ptr, *tmp;
-	char buf[BUFLEN], tama[MAXNAME+1];
+	char buf[BUFLEN], tama[MAXNAME + 1];
 	int ctr;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return;
 
-	if((tmp=tmpfile())==NULL)
+	if ((tmp = tmpfile()) == NULL)
 		return;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL) {
-		if(strstr(buf, tama)==buf) continue;
+	while (fgets(buf, BUFLEN, ptr) != NULL) {
+		if (strstr(buf, tama) == buf)
+			continue;
 		fputs(buf, tmp);
 	}
 
 	ptr = freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
-	while((ctr=getc(tmp))!=EOF)
+	while ((ctr = getc(tmp)) != EOF)
 		putc(ctr, ptr);
 
 	fclose(ptr);
@@ -294,31 +311,33 @@ void del(char *name)
 int setpass(char *name, char *pass)
 {
 	FILE *ptr, *tmp;
-	char buf[BUFLEN], tama[MAXNAME+1];
+	char buf[BUFLEN], tama[MAXNAME + 1];
 	int ctr;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
 
-	if((tmp=tmpfile())==NULL)
+	if ((tmp = tmpfile()) == NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL) {
-		if(strstr(buf, tama)==buf) {
-			fprintf(tmp, "%s%s:%d:%d:%d:%d:\n", tama, pass, getbirth(name),
-				gettime(name), getpet(name), getweight(name));
+	while (fgets(buf, BUFLEN, ptr) != NULL) {
+		if (strstr(buf, tama) == buf) {
+			fprintf(tmp, "%s%s:%d:%d:%d:%d:\n", tama, pass,
+				getbirth(name), gettime(name), getpet(name),
+				getweight(name));
 			continue;
 		}
 		fputs(buf, tmp);
 	}
 
 	ptr = freopen(configstruct.tamafile, "w", ptr);
-	if (!ptr) return -1;
+	if (!ptr)
+		return -1;
 	rewind(tmp);
 
-	while((ctr=getc(tmp))!=EOF)
+	while ((ctr = getc(tmp)) != EOF)
 		putc(ctr, ptr);
 
 	fclose(ptr);
@@ -330,32 +349,34 @@ int setpass(char *name, char *pass)
 int setname(char *oldname, char *newname)
 {
 	FILE *ptr, *tmp;
-	char buf[BUFLEN], tama[MAXNAME+1];
+	char buf[BUFLEN], tama[MAXNAME + 1];
 	int ctr;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
 
-	if((tmp=tmpfile())==NULL)
+	if ((tmp = tmpfile()) == NULL)
 		return -1;
 
 	strncpy(tama, oldname, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL) {
-		if(strstr(buf, tama)==buf) {
+	while (fgets(buf, BUFLEN, ptr) != NULL) {
+		if (strstr(buf, tama) == buf) {
 			getpassw(oldname, buf);
-			fprintf(tmp, "%s:%s:%d:%d:%d:%d:\n", newname, buf, getbirth(oldname),
-				gettime(oldname), getpet(oldname), getweight(oldname));
+			fprintf(tmp, "%s:%s:%d:%d:%d:%d:\n", newname, buf,
+				getbirth(oldname), gettime(oldname),
+				getpet(oldname), getweight(oldname));
 			continue;
 		}
 		fputs(buf, tmp);
 	}
 
 	ptr = freopen(configstruct.tamafile, "w", ptr);
-	if (!ptr) return -1;
+	if (!ptr)
+		return -1;
 	rewind(tmp);
 
-	while((ctr=getc(tmp))!=EOF)
+	while ((ctr = getc(tmp)) != EOF)
 		putc(ctr, ptr);
 
 	fclose(ptr);
@@ -368,39 +389,42 @@ int setname(char *oldname, char *newname)
 int feed(char *name)
 {
 	FILE *ptr, *tmp;
-	char buf[BUFLEN], tama[MAXNAME+1];
-	int ctr, num=0;
+	char buf[BUFLEN], tama[MAXNAME + 1];
+	int ctr, num = 0;
 
-	if((time(NULL)-gettime(name))/3600 < configstruct.feedlimit)
+	if ((time(NULL) - gettime(name)) / 3600 < configstruct.feedlimit)
 		return 1;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
 
-	if((tmp=tmpfile())==NULL)
+	if ((tmp = tmpfile()) == NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL) {
-		if(strstr(buf, tama)==buf) {
-			for(ctr=0; ctr<BUFLEN; ctr++) {
-				if(buf[ctr]==':') num++;
-				if(num==3) break;
+	while (fgets(buf, BUFLEN, ptr) != NULL) {
+		if (strstr(buf, tama) == buf) {
+			for (ctr = 0; ctr < BUFLEN; ctr++) {
+				if (buf[ctr] == ':')
+					num++;
+				if (num == 3)
+					break;
 			}
-			buf[ctr+1]='\0';
+			buf[ctr + 1] = '\0';
 			fprintf(tmp, "%s%d:%d:%d:\n", buf, (int)time(NULL),
-				getpet(name), getweight(name)+1);
+				getpet(name), getweight(name) + 1);
 			continue;
 		}
 		fputs(buf, tmp);
 	}
 
 	ptr = freopen(configstruct.tamafile, "w", ptr);
-	if (!ptr) return -1;
+	if (!ptr)
+		return -1;
 	rewind(tmp);
 
-	while((ctr=getc(tmp))!=EOF)
+	while ((ctr = getc(tmp)) != EOF)
 		putc(ctr, ptr);
 
 	fclose(ptr);
@@ -412,24 +436,26 @@ int feed(char *name)
 int pet(char *name)
 {
 	FILE *ptr, *tmp;
-	char buf[BUFLEN], tama[MAXNAME+1];
-	int ctr, num=0;
+	char buf[BUFLEN], tama[MAXNAME + 1];
+	int ctr, num = 0;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL)
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL)
 		return -1;
 
-	if((tmp=tmpfile())==NULL)
+	if ((tmp = tmpfile()) == NULL)
 		return -1;
 
 	strncpy(tama, name, MAXNAME);
 	strcat(tama, ":");
-	while(fgets(buf, BUFLEN, ptr)!=NULL) {
-		if(strstr(buf, tama)==buf) {
-			for(ctr=0; ctr<BUFLEN; ctr++) {
-				if(buf[ctr]==':') num++;
-				if(num==4) break;
+	while (fgets(buf, BUFLEN, ptr) != NULL) {
+		if (strstr(buf, tama) == buf) {
+			for (ctr = 0; ctr < BUFLEN; ctr++) {
+				if (buf[ctr] == ':')
+					num++;
+				if (num == 4)
+					break;
 			}
-			buf[ctr+1]='\0';
+			buf[ctr + 1] = '\0';
 			fprintf(tmp, "%s%d:%d:\n", buf, (int)time(NULL),
 				getweight(name));
 			continue;
@@ -438,10 +464,11 @@ int pet(char *name)
 	}
 
 	ptr = freopen(configstruct.tamafile, "w", ptr);
-	if (!ptr) return -1;
+	if (!ptr)
+		return -1;
 	rewind(tmp);
 
-	while((ctr=getc(tmp))!=EOF)
+	while ((ctr = getc(tmp)) != EOF)
 		putc(ctr, ptr);
 
 	fclose(ptr);

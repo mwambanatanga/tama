@@ -9,10 +9,10 @@
 
 #include "tama.h"
 
-
 #define DELIM "="
 
-void init_config(struct config *configstruct) {
+void init_config(struct config *configstruct)
+{
 	configstruct->port = PORT;
 	configstruct->maxqueue = MAXQUEUE;
 	strncpy(configstruct->tamafile, TAMAFILE, MAXBUF);
@@ -25,6 +25,7 @@ void init_config(struct config *configstruct) {
 	configstruct->maxclients = MAXCLIENTS;
 	configstruct->maxlist = MAXLIST;
 }
+
 /*
  * trim: get rid of trailing and leading whitespace...
  *       ...including the annoying "\n" from fgets()
@@ -104,7 +105,7 @@ int readconfig(char *filename, struct config *configstruct)
 			configstruct->maxlist = atoi(value);
 		else
 			printf("Unknown option: %s\n", name);
-	}		/* End while */
+	}			/* End while */
 	fclose(file);
 	return 0;
 }

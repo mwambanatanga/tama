@@ -14,14 +14,14 @@
 #define MOTD "tama.motd"	/* MOTD file */
 #define TAMAFILE "tamas"
 #define INITWEIGHT 20
-#define FEEDLIMIT 3	/* hours between feedings */
+#define FEEDLIMIT 3		/* hours between feedings */
 #define TAB 8
-#define HUNGERTIME 12	/* period of time to trigger hunger and/or loneliness (same interval for both) */
-#define HUNGERPOUND 12	/* period of hunger to lose a pound */
+#define HUNGERTIME 12		/* period of time to trigger hunger and/or loneliness (same interval for both) */
+#define HUNGERPOUND 12		/* period of hunger to lose a pound */
 #define DEATHTIME 48
 #define LONELYTIME 6
-#define MAXCLIENTS 5	/* maximum number of simultaneous clients */
-#define MAXLIST 20	/* maximum number of listings for list() */
+#define MAXCLIENTS 5		/* maximum number of simultaneous clients */
+#define MAXLIST 20		/* maximum number of listings for list() */
 
 #define NOACCESS "Error: Can't open Tamagotchi file. Please try again later.\n"
 #define NOCOMMAND "What?\n"
@@ -148,4 +148,4 @@ int readconfig(char *filename, struct config *configstruct);
 
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE
-#endif /* ! _XOPEN_SOURCE */
+#endif				/* ! _XOPEN_SOURCE */

@@ -2,7 +2,7 @@
 ** List all living Tamagotchi profiles (max = MAXLIST or configstruct.maxlist)
 **
 ** by Milos Glisic, '97.
-*/ 
+*/
 
 /* includes */
 #include <sys/types.h>
@@ -19,53 +19,55 @@ extern int server_socket;
 void list()
 {
 	char buf[BUFLEN], tmp[BUFLEN];
-	unsigned int ctr, num=0;
+	unsigned int ctr, num = 0;
 	FILE *ptr;
 
-	if((ptr=fopen(configstruct.tamafile, "r"))==NULL) {
+	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL) {
 		put(NOACCESS);
 		return;
 	}
 
 	put("\nName\t\tAge\n-------------------------------\n");
 
-	while(fgets(buf, BUFLEN, ptr)!=NULL) {
-		for(ctr=0; ctr<BUFLEN; ctr++)
-			if(buf[ctr]==':') {
-				buf[ctr]=0;
+	while (fgets(buf, BUFLEN, ptr) != NULL) {
+		for (ctr = 0; ctr < BUFLEN; ctr++)
+			if (buf[ctr] == ':') {
+				buf[ctr] = 0;
 				break;
 			}
 
-	/* If Tamagotchi is dead but not cleared, don't list it */
-		if((time(NULL)-gettime(buf))/3600 - getweight(buf) > configstruct.deathtime)
+		/* If Tamagotchi is dead but not cleared, don't list it */
+		if ((time(NULL) - gettime(buf)) / 3600 - getweight(buf) >
+		    configstruct.deathtime)
 			continue;
 
 		num++;
-		if(num == configstruct.maxlist)
+		if (num == configstruct.maxlist)
 			break;
 
 		put(buf);
-		
-	/* Make sure it lines up... */
-		if(strlen(buf) < TAB)
+
+		/* Make sure it lines up... */
+		if (strlen(buf) < TAB)
 			put("\t\t");
 		else
 			put("\t");
 
-		sprintf(tmp, "%d hours\n", ((int)time(NULL)-getbirth(buf))/3600);
+		sprintf(tmp, "%d hours\n",
+			((int)time(NULL) - getbirth(buf)) / 3600);
 		put(tmp);
 	}
 	fclose(ptr);
 	put("\n");
 
 	return;
-} 
+}
 
 void putmotd(int fd)
 {
 	char ch;
 
-	while(read(fd, (char *)&ch, 1) > 0)
+	while (read(fd, (char *)&ch, 1) > 0)
 		write(server_socket, &ch, 1);
 
 	close(fd);

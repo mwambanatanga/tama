@@ -28,7 +28,7 @@
 
 #ifdef _AIX
 #include <strings.h>
-#endif /* _AIX */
+#endif				/* _AIX */
 
 #include "tama.h"
 
@@ -45,7 +45,7 @@ char *logtime()
 	thetime = localtime(&utime);
 	string = asctime(thetime);
 
-	string[strlen(string)-1]=0;
+	string[strlen(string) - 1] = 0;
 	return string;
 }
 
@@ -77,15 +77,16 @@ void segv(int sig)
 	put("An error has occured in the Net Tamagotchi server.\n");
 	put("Please report the circumstances which caused this to algernon@debian.org\n");
 	put("Thank you.\n");
-	printf("%s Segmentation violation. Client handler exiting.\n", logtime());
-	fflush(NULL);	
+	printf("%s Segmentation violation. Client handler exiting.\n",
+	       logtime());
+	fflush(NULL);
 	exit(0);
 }
 
 /* SIGCHLD handler */
 void chld(int sig)
 {
- /* Do nothing.  Catch signal so that the select() call gets interrupted. */
+	/* Do nothing.  Catch signal so that the select() call gets interrupted. */
 }
 
 /* read a string from the client - added compatibility */
@@ -94,16 +95,18 @@ void get(char *buf)
 {
 	int ctr;
 
-	for(ctr=0; ctr<BUFLEN; ctr++) {
-		if(recv(server_socket, buf+ctr, 1, 0)<0) {
+	for (ctr = 0; ctr < BUFLEN; ctr++) {
+		if (recv(server_socket, buf + ctr, 1, 0) < 0) {
 			close(server_socket);
 			exit(0);
 		}
-		if(buf[ctr]=='\r') ctr--;
-		else if(buf[ctr]=='\n') break;
+		if (buf[ctr] == '\r')
+			ctr--;
+		else if (buf[ctr] == '\n')
+			break;
 	}
 
-	buf[ctr]='\0';
+	buf[ctr] = '\0';
 }
 
 /* sends output to client - extended client support */
@@ -111,9 +114,9 @@ void put(char *buf)
 {
 	int ctr;
 
-	for(ctr=0; ctr<strlen(buf); ctr++) {
-		send(server_socket, buf+ctr, 1, 0);
-		if(buf[ctr]=='\n')
+	for (ctr = 0; ctr < strlen(buf); ctr++) {
+		send(server_socket, buf + ctr, 1, 0);
+		if (buf[ctr] == '\n')
 			send(server_socket, "\r", 1, 0);
 	}
 }
@@ -143,23 +146,25 @@ int main(int argc, char **argv)
 			break;
 		case 'q':
 			printf("Setting queue size to %s\n", optarg);
-			for (i=0;i<strlen(optarg); i++) {
+			for (i = 0; i < strlen(optarg); i++) {
 				if (!isdigit(optarg[i])) {
-					printf ("Queue size is not a number\n");
+					printf("Queue size is not a number\n");
 					j = 1;
 				}
 			}
-			if (!j) configstruct.maxqueue = atoi(optarg);
+			if (!j)
+				configstruct.maxqueue = atoi(optarg);
 			break;
 		case 'p':
 			printf("Setting port number to %s\n", optarg);
-			for (i=0;i<strlen(optarg); i++) {
+			for (i = 0; i < strlen(optarg); i++) {
 				if (!isdigit(optarg[i])) {
-					printf ("Port is not a number\n");
+					printf("Port is not a number\n");
 					j = 1;
 				}
 			}
-			if (!j) configstruct.port = atoi(optarg);
+			if (!j)
+				configstruct.port = atoi(optarg);
 			break;
 		}
 	}
@@ -170,9 +175,11 @@ int main(int argc, char **argv)
 	printf("Initial weight set to %i pounds\n", configstruct.initweight);
 	printf("Feeding interval set to %i hours\n", configstruct.feedlimit);
 	printf("Hunger time set to %i hours\n", configstruct.hungertime);
-	printf("Time to lose a pound set to %i hours\n", configstruct.hungerpound);
+	printf("Time to lose a pound set to %i hours\n",
+	       configstruct.hungerpound);
 	printf("Time to death set to %i\n", configstruct.deathtime);
-	printf("Time to getting lonely set to %i hours\n", configstruct.lonelytime);
+	printf("Time to getting lonely set to %i hours\n",
+	       configstruct.lonelytime);
 	printf("Max number of clients set to %i\n", configstruct.maxclients);
 	printf("List length limit to %i\n", configstruct.maxlist);
 
@@ -183,7 +190,7 @@ int main(int argc, char **argv)
 	struct sockaddr_in sin;
 	struct sockaddr_in fsin;
 	int result;
-	char buf[BUFLEN], name[MAXNAME+1], arg[BUFLEN], *ptr; 
+	char buf[BUFLEN], name[MAXNAME + 1], arg[BUFLEN], *ptr;
 /**
 	if(argc>1) {
 		if(argc>2 || atoi(argv[1])==0) {
@@ -195,13 +202,13 @@ int main(int argc, char **argv)
 	port = configstruct.port;
 
 	/* Hook signals */
-	(void) signal(SIGINT, term);
-	(void) signal(SIGALRM, timeout);
-	(void) signal(SIGSEGV, segv);
-	(void) signal(SIGCHLD, chld);
+	(void)signal(SIGINT, term);
+	(void)signal(SIGALRM, timeout);
+	(void)signal(SIGSEGV, segv);
+	(void)signal(SIGCHLD, chld);
 
 	printf("%s [%d] Starting %s\n", logtime(), getpid(), VER);
-	if((ns = socket(AF_INET, SOCK_STREAM, IPPROTO_IP)) < 0) {
+	if ((ns = socket(AF_INET, SOCK_STREAM, IPPROTO_IP)) < 0) {
 		perror("socket()");
 		return 1;
 	}
@@ -212,11 +219,11 @@ int main(int argc, char **argv)
 	memset(&sin, 0, sizeof(struct sockaddr));
 	memset(&fsin, 0, sizeof(struct sockaddr));
 
-	sin.sin_family=AF_INET;
-	sin.sin_port=htons(port);
-	sin.sin_addr.s_addr=htonl(inet_addr(LOCAL));
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(port);
+	sin.sin_addr.s_addr = htonl(inet_addr(LOCAL));
 
-	if(bind(ns, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
+	if (bind(ns, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
 		printf("%s ", logtime());
 		fflush(stdout);
 		perror("bind()");
@@ -224,27 +231,29 @@ int main(int argc, char **argv)
 	}
 	printf("%s Bound socket to port %d\n", logtime(), port);
 
-	if(listen(ns, configstruct.maxqueue) < 0) {
+	if (listen(ns, configstruct.maxqueue) < 0) {
 		perror("listen()");
 		return 1;
 	}
 
 	printf("%s Listening for connections...\n", logtime());
-	while(1) {
+	while (1) {
 		socklen_t fromlen;
 		char clienthost[1024];
 		char clientport[20];
 		/* Set time interval in which to perform zombie checks...
-		** We have to do this every time it loops because select()
-		** under Linux clears the timeout struct... lame. */
+		 ** We have to do this every time it loops because select()
+		 ** under Linux clears the timeout struct... lame. */
 		to.tv_sec = CHECKTIME * 60;
 		to.tv_usec = 0;
 
 		/* Clear input */
 		FD_ZERO(&input);
 		FD_SET(ns, &input);
-		if(select(ns + 1, &input, NULL, NULL, &to) > 0) {
-			if((rs = accept(ns, (struct sockaddr *)&fsin, &fromlen)) < 0) {
+		if (select(ns + 1, &input, NULL, NULL, &to) > 0) {
+			if ((rs =
+			     accept(ns, (struct sockaddr *)&fsin,
+				    &fromlen)) < 0) {
 				printf("%s ", logtime());
 				fflush(stdout);
 				perror("accept()");
@@ -254,14 +263,16 @@ int main(int argc, char **argv)
 			}
 		} else {
 			/* Kill off zombies */
-			while((pid = waitpid(0, NULL, WNOHANG)) > 0) {
-				printf("%s [%d] Connection closed - purging session\n", logtime(), pid);
+			while ((pid = waitpid(0, NULL, WNOHANG)) > 0) {
+				printf
+				    ("%s [%d] Connection closed - purging session\n",
+				     logtime(), pid);
 				clients--;
 			}
 			continue;
 		}
 
-		if(clients >= configstruct.maxclients) {
+		if (clients >= configstruct.maxclients) {
 			server_socket = rs;
 			put("\nSorry, Net Tamagotchi is full right now.\nTry logging in later.\n\n");
 			close(rs);
@@ -272,25 +283,31 @@ int main(int argc, char **argv)
 		flags = fcntl(ns, F_GETFL);
 		flags |= O_NONBLOCK;
 
-		if(fcntl(ns, F_SETFL, flags) < 0) {
+		if (fcntl(ns, F_SETFL, flags) < 0) {
 			printf("%s ", logtime());
 			fflush(stdout);
 			perror("fcntl()");
 		}
 
 		/* Fork a child to handle the session and wait for it to terminate */
-		if((pid=fork()) > 0) {
+		if ((pid = fork()) > 0) {
 
-		/* Resolve remote hostname */
-//			hp = gethostbyaddr((char *)&fsin.sin_addr, sizeof(struct in_addr), fsin.sin_family);
-			result = getnameinfo((struct sockaddr *)&fsin, sizeof(fsin), clienthost, sizeof(clienthost), clientport, sizeof(clientport), 0);
+			/* Resolve remote hostname */
+//                      hp = gethostbyaddr((char *)&fsin.sin_addr, sizeof(struct in_addr), fsin.sin_family);
+			result =
+			    getnameinfo((struct sockaddr *)&fsin, sizeof(fsin),
+					clienthost, sizeof(clienthost),
+					clientport, sizeof(clientport), 0);
 /*
 			if (hp)
 				host = hp->h_name;
 			else
 				host = inet_ntoa(fsin.sin_addr);	
-*/	
-			if (result == 0) printf("%s [%d] Accepted connection from %s:%s\n", logtime(), pid, clienthost, clientport);
+*/
+			if (result == 0)
+				printf
+				    ("%s [%d] Accepted connection from %s:%s\n",
+				     logtime(), pid, clienthost, clientport);
 			close(rs);
 			continue;
 		}
@@ -298,16 +315,16 @@ int main(int argc, char **argv)
 		/* Login */
 		server_socket = rs;
 
-		if((fd=open(MOTD, O_RDONLY)) > 0)
+		if ((fd = open(MOTD, O_RDONLY)) > 0)
 			putmotd(fd);
 
 		put(INTRO);
 		alarm(TIMELIMIT);	/* Set timeout alarm */
 		get(buf);
 		strncpy(name, buf, MAXNAME);
-		if(exist(name)<0) {
+		if (exist(name) < 0) {
 			/* Check username format */
-			if(check(name)<0) {
+			if (check(name) < 0) {
 				put("That name is invalid.\n");
 				put(STRINGRULE);
 				close(server_socket);
@@ -315,21 +332,22 @@ int main(int argc, char **argv)
 			}
 			put("That Tamagotchi doesn't exist. Would you like to create it? ");
 			get(buf);
-			if(buf[0]!='y' && buf[0]!='Y') {
+			if (buf[0] != 'y' && buf[0] != 'Y') {
 				put("Fine, but you're missing out!\n");
 				close(server_socket);
 				exit(0);
 			}
-			while(1) {
+			while (1) {
 				put("Please choose a password: ");
 				get(buf);
-	
-			/* Check password format validity */
-				if(check(buf)==0) break;
+
+				/* Check password format validity */
+				if (check(buf) == 0)
+					break;
 				put(STRINGRULE);
 			}
-			if(new(name, buf) < 0) {
-				put(NOACCESS );
+			if (new(name, buf) < 0) {
+				put(NOACCESS);
 				close(server_socket);
 				exit(0);
 			}
@@ -340,8 +358,9 @@ int main(int argc, char **argv)
 		} else {
 			put("Tamagotchi found. Please enter password: ");
 			get(buf);
-			if(checkpass(name, buf)<0) {
-				printf("%s Incorrect password for %s\n", logtime(), name);
+			if (checkpass(name, buf) < 0) {
+				printf("%s Incorrect password for %s\n",
+				       logtime(), name);
 				put("Password incorrect.\n");
 				return 1;
 			}
@@ -351,32 +370,39 @@ int main(int argc, char **argv)
 		put("Hi! The time limit for this session is 5 minutes\n");
 		status(name, 1);
 
-		while(1) {
+		while (1) {
 			do {
-				buf[0]='\0';
+				buf[0] = '\0';
 				put("> ");
 				get(buf);
-			} while(strlen(buf)==0);
-	
-			printf("%s Got command from %s: %s\n", logtime(), name, buf);
+			} while (strlen(buf) == 0);
+
+			printf("%s Got command from %s: %s\n", logtime(), name,
+			       buf);
 
 			/* parse argument */
-			if(strstr(buf, " ")!=NULL) {
+			if (strstr(buf, " ") != NULL) {
 				ptr = buf;
-				while(isalnum(ptr[0])) ptr++;
+				while (isalnum(ptr[0]))
+					ptr++;
 				ptr[0] = 0;
-				while(!isalnum(ptr[0])) ptr++;
+				while (!isalnum(ptr[0]))
+					ptr++;
 				strncpy(arg, ptr, BUFLEN);
-			} else arg[0] = 0;
+			} else
+				arg[0] = 0;
 
-			if(strstr(arg, " ")!=NULL) {
+			if (strstr(arg, " ") != NULL) {
 				ptr = arg;
-				while(isalnum(ptr[0])) ptr++;
+				while (isalnum(ptr[0]))
+					ptr++;
 				ptr[0] = 0;
-				while(!isalnum(ptr[0])) ptr++;
-			} else ptr = NULL;
+				while (!isalnum(ptr[0]))
+					ptr++;
+			} else
+				ptr = NULL;
 
-			if(exec(buf, arg, ptr, name) < 0) {
+			if (exec(buf, arg, ptr, name) < 0) {
 				put(BYE);
 				close(server_socket);
 				return 0;
