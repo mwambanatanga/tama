@@ -32,9 +32,7 @@
 
 #include "tama.h"
 
-int s;
-
-
+int server_socket;
 
 /* Return ASCII string of current time */
 char *logtime()
@@ -97,8 +95,8 @@ void get(char *buf)
 	int ctr;
 
 	for(ctr=0; ctr<BUFLEN; ctr++) {
-		if(recv(s, buf+ctr, 1, 0)<0) {
-			close(s);
+		if(recv(server_socket, buf+ctr, 1, 0)<0) {
+			close(server_socket);
 			exit(0);
 		}
 		if(buf[ctr]=='\r') ctr--;
@@ -114,9 +112,9 @@ void put(char *buf)
 	int ctr;
 
 	for(ctr=0; ctr<strlen(buf); ctr++) {
-		send(s, buf+ctr, 1, 0);
+		send(server_socket, buf+ctr, 1, 0);
 		if(buf[ctr]=='\n')
-			send(s, "\r", 1, 0);
+			send(server_socket, "\r", 1, 0);
 	}
 }
 
@@ -138,8 +136,10 @@ int main(int argc, char **argv)
 			break;
 		case 'c':
 			printf("Setting config file to \"%s\"\n", optarg);
-			if (0 != readconfig(optarg, &configstruct))
+			if (0 != readconfig(optarg, &configstruct)) {
 				printf("Can not read config file.\n");
+				return 1;
+			}
 			break;
 		case 'q':
 			printf("Setting queue size to %s\n", optarg);
@@ -182,7 +182,6 @@ int main(int argc, char **argv)
 	struct timeval to;
 	struct sockaddr_in sin;
 	struct sockaddr_in fsin;
-	struct hostent *hp;
 	int result;
 	char buf[BUFLEN], name[MAXNAME+1], arg[BUFLEN], *ptr; 
 /**
@@ -263,7 +262,7 @@ int main(int argc, char **argv)
 		}
 
 		if(clients >= configstruct.maxclients) {
-			s = rs;
+			server_socket = rs;
 			put("\nSorry, Net Tamagotchi is full right now.\nTry logging in later.\n\n");
 			close(rs);
 			continue;
@@ -297,7 +296,7 @@ int main(int argc, char **argv)
 		}
 
 		/* Login */
-		s = rs;
+		server_socket = rs;
 
 		if((fd=open(MOTD, O_RDONLY)) > 0)
 			putmotd(fd);
@@ -311,14 +310,14 @@ int main(int argc, char **argv)
 			if(check(name)<0) {
 				put("That name is invalid.\n");
 				put(STRINGRULE);
-				close(s);
+				close(server_socket);
 				exit(0);
 			}
 			put("That Tamagotchi doesn't exist. Would you like to create it? ");
 			get(buf);
 			if(buf[0]!='y' && buf[0]!='Y') {
 				put("Fine, but you're missing out!\n");
-				close(s);
+				close(server_socket);
 				exit(0);
 			}
 			while(1) {
@@ -331,7 +330,7 @@ int main(int argc, char **argv)
 			}
 			if(new(name, buf) < 0) {
 				put(NOACCESS );
-				close(s);
+				close(server_socket);
 				exit(0);
 			}
 			put("\nNew Tamagotchi \"");
@@ -379,7 +378,7 @@ int main(int argc, char **argv)
 
 			if(exec(buf, arg, ptr, name) < 0) {
 				put(BYE);
-				close(s);
+				close(server_socket);
 				return 0;
 			}
 		}

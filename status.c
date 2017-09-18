@@ -18,7 +18,7 @@
 #include "tama.h"
 
 
-extern int s;
+extern int server_socket;
 
 void status(char *name, int proc)
 {
@@ -42,7 +42,7 @@ void status(char *name, int proc)
 	if(getweight(name)<1) {
 		put(DEAD);
 		del(name);
-		close(s);
+		close(server_socket);
 		exit(0);
 	}
 
@@ -61,7 +61,7 @@ void status(char *name, int proc)
 		if(getweight(name)<1) {
 			put(DEAD);
 			del(name);
-			close(s);
+			close(server_socket);
 			exit(0);
 		}
 	}

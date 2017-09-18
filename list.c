@@ -13,7 +13,7 @@
 
 #include "tama.h"
 
-extern int s;
+extern int server_socket;
 
 /* send tamagotchi list to client */
 void list()
@@ -66,7 +66,7 @@ void putmotd(int fd)
 	char ch;
 
 	while(read(fd, (char *)&ch, 1) > 0)
-		write(s, &ch, 1);
+		write(server_socket, &ch, 1);
 
 	close(fd);
 }

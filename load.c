@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <limits.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "tama.h"
 
@@ -51,61 +53,59 @@ char *trim(char *s)
 
 int readconfig(char *filename, struct config *configstruct)
 {
-	char *s, buff[256];
+	char *s;
 	FILE *file = fopen(filename, "r");
-	if (file != NULL) {
-		char line[MAXBUF];
-		int i = 0;
-
-		while (fgets(line, sizeof(line), file) != NULL) {
-			/* Skip blank lines and comments */
-			if (line[0] == '\n' || line[0] == '#')
-				continue;
-			/* Parse name/value pair from line */
-			char name[MAXBUF], value[MAXBUF];
-			s = strtok(line, DELIM);
-			if (s == NULL)
-				continue;
-			else {
-				trim(s);
-				strncpy(name, s, MAXBUF);
-			}
-			s = strtok(NULL, DELIM);
-			if (s == NULL)
-				continue;
-			else
-				strncpy(value, s, MAXBUF);
-			trim(value);
-
-			if (strcmp(name, "port") == 0) 
-				configstruct->port = atoi(value);
-			else if (strcmp(name, "maxqueue") == 0)
-				configstruct->maxqueue = atoi(value);
-			else if (strcmp(name, "tamafile") == 0)
-				strncpy(configstruct->tamafile, value, MAXBUF);
-			else if (strcmp(name, "initweight") == 0)
-				configstruct->initweight = atoi(value);
-			else if (strcmp(name, "feedlimit") == 0)
-				configstruct->feedlimit = atoi(value);
-			else if (strcmp(name, "hungertime") == 0)
-				configstruct->hungertime = atoi(value);
-			else if (strcmp(name, "hungerpound") == 0)
-				configstruct->hungerpound = atoi(value);
-			else if (strcmp(name, "deathtime") == 0)
-				configstruct->deathtime = atoi(value);
-			else if (strcmp(name, "lonelytime") == 0)
-				configstruct->lonelytime = atoi(value);
-			else if (strcmp(name, "maxclients") == 0)
-				configstruct->maxclients = atoi(value);
-			else if (strcmp(name, "maxlist") == 0)
-				configstruct->maxlist = atoi(value);
-			else
-				printf("Unknown option: %s\n", name);
-		}		/* End while */
-		fclose(file);
-	} else {
-		fclose(file);
+	if (file == NULL) {
+		return 1;
 	}
+	char line[MAXBUF];
+
+	while (fgets(line, sizeof(line), file) != NULL) {
+		/* Skip blank lines and comments */
+		if (line[0] == '\n' || line[0] == '#')
+			continue;
+		/* Parse name/value pair from line */
+		char name[MAXBUF], value[MAXBUF];
+		s = strtok(line, DELIM);
+		if (s == NULL)
+			continue;
+		else {
+			trim(s);
+			strncpy(name, s, MAXBUF);
+		}
+		s = strtok(NULL, DELIM);
+		if (s == NULL)
+			continue;
+		else
+			strncpy(value, s, MAXBUF);
+		trim(value);
+
+		if (strcmp(name, "port") == 0)
+			configstruct->port = atoi(value);
+		else if (strcmp(name, "maxqueue") == 0)
+			configstruct->maxqueue = atoi(value);
+		else if (strcmp(name, "tamafile") == 0)
+			strncpy(configstruct->tamafile, value, MAXBUF);
+		else if (strcmp(name, "initweight") == 0)
+			configstruct->initweight = atoi(value);
+		else if (strcmp(name, "feedlimit") == 0)
+			configstruct->feedlimit = atoi(value);
+		else if (strcmp(name, "hungertime") == 0)
+			configstruct->hungertime = atoi(value);
+		else if (strcmp(name, "hungerpound") == 0)
+			configstruct->hungerpound = atoi(value);
+		else if (strcmp(name, "deathtime") == 0)
+			configstruct->deathtime = atoi(value);
+		else if (strcmp(name, "lonelytime") == 0)
+			configstruct->lonelytime = atoi(value);
+		else if (strcmp(name, "maxclients") == 0)
+			configstruct->maxclients = atoi(value);
+		else if (strcmp(name, "maxlist") == 0)
+			configstruct->maxlist = atoi(value);
+		else
+			printf("Unknown option: %s\n", name);
+	}		/* End while */
+	fclose(file);
 	return 0;
 }
 

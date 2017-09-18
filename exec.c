@@ -13,7 +13,7 @@
 
 #include "tama.h"
 
-extern int s;
+extern int server_socket;
 
 /* returns -1 if command is to quit, 0 otherwise */
 int exec(char *buf, char *arg, char *pass, char *name)
@@ -308,7 +308,7 @@ int exec(char *buf, char *arg, char *pass, char *name)
 		}
 
 		if(strcmp(arg, name)==0) {
-			close(s);
+			close(server_socket);
 			exit(0);
 		}
 	}

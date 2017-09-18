@@ -166,7 +166,8 @@ int setweight(char *name, int weight)
 		fputs(buf, tmp);
 	}
 
-	freopen(configstruct.tamafile, "w", ptr);
+	ptr = freopen(configstruct.tamafile, "w", ptr);
+	if (!ptr) return -1;
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -278,7 +279,7 @@ void del(char *name)
 		fputs(buf, tmp);
 	}
 
-	freopen(configstruct.tamafile, "w", ptr);
+	ptr = freopen(configstruct.tamafile, "w", ptr);
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -313,7 +314,8 @@ int setpass(char *name, char *pass)
 		fputs(buf, tmp);
 	}
 
-	freopen(configstruct.tamafile, "w", ptr);
+	ptr = freopen(configstruct.tamafile, "w", ptr);
+	if (!ptr) return -1;
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -349,7 +351,8 @@ int setname(char *oldname, char *newname)
 		fputs(buf, tmp);
 	}
 
-	freopen(configstruct.tamafile, "w", ptr);
+	ptr = freopen(configstruct.tamafile, "w", ptr);
+	if (!ptr) return -1;
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -393,7 +396,8 @@ int feed(char *name)
 		fputs(buf, tmp);
 	}
 
-	freopen(configstruct.tamafile, "w", ptr);
+	ptr = freopen(configstruct.tamafile, "w", ptr);
+	if (!ptr) return -1;
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
@@ -433,7 +437,8 @@ int pet(char *name)
 		fputs(buf, tmp);
 	}
 
-	freopen(configstruct.tamafile, "w", ptr);
+	ptr = freopen(configstruct.tamafile, "w", ptr);
+	if (!ptr) return -1;
 	rewind(tmp);
 
 	while((ctr=getc(tmp))!=EOF)
