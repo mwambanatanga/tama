@@ -1,5 +1,5 @@
 /*
-** List all living Tamagotchi profiles (max = MAXLIST or configstruct.maxlist)
+** List all living Tamagotchi profiles (max = MAXLIST or configstruct->maxlist)
 **
 ** by Milos Glisic, '97.
 */
@@ -16,13 +16,13 @@
 extern int server_socket;
 
 /* send tamagotchi list to client */
-void list()
+void list(void)
 {
 	char buf[BUFLEN], tmp[BUFLEN];
 	unsigned int ctr, num = 0;
 	FILE *ptr;
 
-	if ((ptr = fopen(configstruct.tamafile, "r")) == NULL) {
+	if ((ptr = fopen(configstruct->tamafile, "r")) == NULL) {
 		put(NOACCESS);
 		return;
 	}
@@ -38,11 +38,11 @@ void list()
 
 		/* If Tamagotchi is dead but not cleared, don't list it */
 		if ((time(NULL) - gettime(buf)) / 3600 - getweight(buf) >
-		    configstruct.deathtime)
+		    configstruct->deathtime)
 			continue;
 
 		num++;
-		if (num == configstruct.maxlist)
+		if (num == configstruct->maxlist)
 			break;
 
 		put(buf);

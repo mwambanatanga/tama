@@ -2,6 +2,9 @@
 **	Tamagotchi header file	- Milos Glisic, 97
 */
 
+#ifndef TAMA_H
+#define TAMA_H
+
 #include <sys/types.h>
 
 #define PORT 9111		/* default port */
@@ -108,9 +111,9 @@ int setname(char *, char *);
 int feed(char *);
 int pet(char *);
 int exec(char *, char *, char *, char *);
-void list();
+void list(void);
 void putmotd(int);
-char *logtime();
+char *logtime(void);
 void term(int);
 void timeout(int);
 void segv(int);
@@ -141,11 +144,13 @@ struct config {
 	int maxlist;
 };
 
-struct config configstruct;
+extern struct config *configstruct;
 
-void init_config(struct config *configstruct);
-int readconfig(char *filename, struct config *configstruct);
+void init_config(void);
+int readconfig(char *filename);
 
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE
 #endif				/* ! _XOPEN_SOURCE */
+
+#endif

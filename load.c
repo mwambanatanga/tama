@@ -11,7 +11,7 @@
 
 #define DELIM "="
 
-void init_config(struct config *configstruct)
+void init_config(void)
 {
 	configstruct->port = PORT;
 	configstruct->maxqueue = MAXQUEUE;
@@ -52,7 +52,7 @@ char *trim(char *s)
 	return s;
 }
 
-int readconfig(char *filename, struct config *configstruct)
+int readconfig(char *filename)
 {
 	char *s;
 	FILE *file = fopen(filename, "r");

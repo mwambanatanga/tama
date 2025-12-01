@@ -25,15 +25,15 @@ void status(char *name, int proc)
 	char tmp[BUFLEN];
 
 	diff = (time(NULL) - gettime(name)) / 3600;
-	if ((time(NULL) - getpet(name)) / 3600 < configstruct.lonelytime)
+	if ((time(NULL) - getpet(name)) / 3600 < configstruct->lonelytime)
 		diff--;
 
 	if (proc > 0) {
-		if ((diff - configstruct.hungertime) > 0) {
+		if ((diff - configstruct->hungertime) > 0) {
 			knockoff =
 			    (diff -
-			     configstruct.hungertime) /
-			    configstruct.hungerpound;
+			     configstruct->hungertime) /
+			    configstruct->hungerpound;
 			if (setweight(name, getweight(name) - knockoff) < 0) {
 				put(NOACCESS);
 				return;	/* paranoid */
@@ -48,20 +48,20 @@ void status(char *name, int proc)
 		exit(0);
 	}
 
-	if (diff < configstruct.hungertime) {
+	if (diff < configstruct->hungertime) {
 		if ((time(NULL) - getpet(name)) / 3600 >=
-		    configstruct.lonelytime)
+		    configstruct->lonelytime)
 			put(LONELY);
 		else
 			put(HAPPY);
-	} else if (diff >= configstruct.hungertime
-		   && diff <= configstruct.deathtime)
+	} else if (diff >= configstruct->hungertime
+		   && diff <= configstruct->deathtime)
 		put(UNHAPPY);
-	else if (diff > configstruct.deathtime) {
+	else if (diff > configstruct->deathtime) {
 		if (proc > 0
 		    && setweight(name,
 				 getweight(name) - (diff -
-						    configstruct.deathtime)) <
+						    configstruct->deathtime)) <
 		    0) {
 			put(NOACCESS);
 			return;

@@ -196,14 +196,14 @@ int exec(char *buf, char *arg, char *pass, char *name)
 
 			diff = (time(NULL) - gettime(arg)) / 3600;
 			if ((time(NULL) - getpet(arg)) / 3600 <
-			    configstruct.lonelytime)
+			    configstruct->lonelytime)
 				diff--;
 
-			if ((diff - configstruct.hungertime) > 0) {
+			if ((diff - configstruct->hungertime) > 0) {
 				knockoff =
 				    (diff -
-				     configstruct.hungertime) /
-				    configstruct.hungerpound;
+				     configstruct->hungertime) /
+				    configstruct->hungerpound;
 				if (setweight(arg, getweight(arg) - knockoff) <
 				    0) {
 					put(NOACCESS);
@@ -258,14 +258,14 @@ int exec(char *buf, char *arg, char *pass, char *name)
 
 			diff = (time(NULL) - gettime(arg)) / 3600;
 			if ((time(NULL) - getpet(arg)) / 3600 <
-			    configstruct.lonelytime)
+			    configstruct->lonelytime)
 				diff--;
 
-			if ((diff - configstruct.hungertime) > 0) {
+			if ((diff - configstruct->hungertime) > 0) {
 				knockoff =
 				    (diff -
-				     configstruct.hungertime) /
-				    configstruct.hungerpound;
+				     configstruct->hungertime) /
+				    configstruct->hungerpound;
 				if (setweight(arg, getweight(arg) - knockoff) <
 				    0) {
 					put(NOACCESS);

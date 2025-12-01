@@ -32,10 +32,12 @@
 
 #include "tama.h"
 
+struct config *configstruct;
+
 int server_socket;
 
 /* Return ASCII string of current time */
-char *logtime()
+char *logtime(void)
 {
 	struct tm *thetime;
 	time_t utime;
@@ -123,7 +125,8 @@ void put(char *buf)
 
 int main(int argc, char **argv)
 {
-	init_config(&configstruct);
+	configstruct = malloc(sizeof(struct config));
+	init_config();
 	int opts;
 	int i;
 	int j = 0;
@@ -139,7 +142,7 @@ int main(int argc, char **argv)
 			break;
 		case 'c':
 			printf("Setting config file to \"%s\"\n", optarg);
-			if (0 != readconfig(optarg, &configstruct)) {
+			if (0 != readconfig(optarg)) {
 				printf("Can not read config file.\n");
 				return 1;
 			}
@@ -153,7 +156,7 @@ int main(int argc, char **argv)
 				}
 			}
 			if (!j)
-				configstruct.maxqueue = atoi(optarg);
+				configstruct->maxqueue = atoi(optarg);
 			break;
 		case 'p':
 			printf("Setting port number to %s\n", optarg);
@@ -164,24 +167,24 @@ int main(int argc, char **argv)
 				}
 			}
 			if (!j)
-				configstruct.port = atoi(optarg);
+				configstruct->port = atoi(optarg);
 			break;
 		}
 	}
 
-	printf("Port number set to %i\n", configstruct.port);
-	printf("Queue limit set to %i\n", configstruct.maxqueue);
-	printf("Pets file set to %s\n", configstruct.tamafile);
-	printf("Initial weight set to %i pounds\n", configstruct.initweight);
-	printf("Feeding interval set to %i hours\n", configstruct.feedlimit);
-	printf("Hunger time set to %i hours\n", configstruct.hungertime);
+	printf("Port number set to %i\n", configstruct->port);
+	printf("Queue limit set to %i\n", configstruct->maxqueue);
+	printf("Pets file set to %s\n", configstruct->tamafile);
+	printf("Initial weight set to %i pounds\n", configstruct->initweight);
+	printf("Feeding interval set to %i hours\n", configstruct->feedlimit);
+	printf("Hunger time set to %i hours\n", configstruct->hungertime);
 	printf("Time to lose a pound set to %i hours\n",
-	       configstruct.hungerpound);
-	printf("Time to death set to %i\n", configstruct.deathtime);
+	       configstruct->hungerpound);
+	printf("Time to death set to %i\n", configstruct->deathtime);
 	printf("Time to getting lonely set to %i hours\n",
-	       configstruct.lonelytime);
-	printf("Max number of clients set to %i\n", configstruct.maxclients);
-	printf("List length limit to %i\n", configstruct.maxlist);
+	       configstruct->lonelytime);
+	printf("Max number of clients set to %i\n", configstruct->maxclients);
+	printf("List length limit to %i\n", configstruct->maxlist);
 
 	fd_set input;
 	pid_t pid;
@@ -199,7 +202,7 @@ int main(int argc, char **argv)
 		} else port = atoi(argv[1]);
 	} else 
 */
-	port = configstruct.port;
+	port = configstruct->port;
 
 	/* Hook signals */
 	(void)signal(SIGINT, term);
@@ -231,7 +234,7 @@ int main(int argc, char **argv)
 	}
 	printf("%s Bound socket to port %d\n", logtime(), port);
 
-	if (listen(ns, configstruct.maxqueue) < 0) {
+	if (listen(ns, configstruct->maxqueue) < 0) {
 		perror("listen()");
 		return 1;
 	}
@@ -272,7 +275,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		if (clients >= configstruct.maxclients) {
+		if (clients >= configstruct->maxclients) {
 			server_socket = rs;
 			put("\nSorry, Net Tamagotchi is full right now.\nTry logging in later.\n\n");
 			close(rs);
